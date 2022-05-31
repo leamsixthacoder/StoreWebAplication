@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using EntityLayer;
+using BussinesLayer;
 
 namespace AdminView.Controllers
 {
@@ -13,18 +15,20 @@ namespace AdminView.Controllers
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Users()
         {
-            ViewBag.Message = "Your application description page.";
 
             return View();
         }
 
-        public ActionResult Contact()
+        public JsonResult ListUsers()
         {
-            ViewBag.Message = "Your contact page.";
+            List<User> olist = new List<User>();
+            olist = new BL_Users().List();
 
-            return View();
+            return Json(olist, JsonRequestBehavior.AllowGet);
         }
+
+        
     }
 }
