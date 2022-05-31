@@ -11,6 +11,11 @@ namespace AdminView
             bundles.Add(new Bundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
 
+            bundles.Add(new Bundle("~/bundles/complements").Include(
+                     "~/Scripts/scripts.js",
+                     "~/Scripts/fontawesome/all.min.js"
+                     ));
+
             //bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
             //            "~/Scripts/jquery.validate*"));
 
