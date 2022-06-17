@@ -39,9 +39,6 @@ namespace DataLayer
                                 Restablecer = Convert.ToBoolean(reader["Restablecer"]),
                                 Activo = Convert.ToBoolean(reader["Activo"])
 
-
-
-
                             });
                         }
                     }
@@ -55,6 +52,40 @@ namespace DataLayer
             }
             return list;
 
+        }
+
+        public int Add(User obj, out string Message)
+        {
+            int idautogenerate = 0;
+            Message = string.Empty;
+            try
+            {
+                using (SqlConnection oconection = new SqlConnection(DataBaseConnection.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_EnrolUser",oconection);
+                    cmd.Parameters.AddWithValue("name",obj.Nombres);
+                    cmd.Parameters.AddWithValue("lastname", obj.Apellidos);
+                    cmd.Parameters.AddWithValue("email", obj.Correo);
+                    cmd.Parameters.AddWithValue("password", obj.Clave);
+                    cmd.Parameters.AddWithValue("active", obj.Activo);
+                    cmd.Parameters.Add("result",SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("message", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    oconection.Open();
+
+                    cmd.ExecuteNonQuery();
+
+                    idautogenerate = Convert.ToInt32(cmd.Parameters["result"].Value);
+                    Message = cmd.Parameters["message"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                idautogenerate = 0;
+                Message = ex.Message;
+            }
+            return idautogenerate;
         }
     }
 }

@@ -20,13 +20,13 @@ namespace AdminView.Controllers
 
             return View();
         }
-
+        [HttpGet]
         public JsonResult ListUsers()
         {
             List<User> olist = new List<User>();
             olist = new BL_Users().List();
 
-            return Json(olist, JsonRequestBehavior.AllowGet);
+            return Json( new { data = olist }, JsonRequestBehavior.AllowGet);
         }
 
         
