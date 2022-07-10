@@ -15,7 +15,9 @@ namespace AdminView
                      "~/Scripts/scripts.js",
                       "~/Scripts/DataTables/jquery.dataTables.js",
                        "~/Scripts/DataTables/dataTables.responsive.js",
-                     "~/Scripts/fontawesome/all.min.js"
+                       "~/Scripts/loadingoverlay/loadingoverlay.min.js",
+                       "~/Scripts//sweetalert.min.js",
+                       "~/Scripts/fontawesome/all.min.js"
                      ));
 
             //bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -32,6 +34,7 @@ namespace AdminView
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/site.css",
                       "~/Content/DataTables/css/jquery.dataTables.css",
+                      "~/Content/sweetalert.css",
                       "~/Content/DataTables/css/responsive.dataTables.css"
                       ));
         }

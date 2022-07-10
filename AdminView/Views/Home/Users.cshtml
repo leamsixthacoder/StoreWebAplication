@@ -48,24 +48,24 @@
                 <h5 class="modal-title" id="exampleModalLabel">Usuario</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body g-2">
+            <div class="modal-body ">
 
                 <input id="txtid" type="hidden" value="0" />
-                <div class="row">
+                <div class="row g-2">
 
                     <div class="col-sm-6">
                         <label for="txtnombres" class="form-label">Nombres</label>
-                        <input type="text" class="form-control" id="txtnombres" placeholder="Junior">
+                        <input type="text" class="form-control" id="txtnombres" autocomplete="off" placeholder="Junior">
                     </div>
 
                     <div class="col-sm-6">
                         <label for="txtapellidos" class="form-label">Apellidos</label>
-                        <input type="text" class="form-control" id="txtapellidos" placeholder="Gonzales">
+                        <input type="text" class="form-control" id="txtapellidos" autocomplete="off" placeholder="Gonzales">
                     </div>
 
                     <div class="col-sm-6">
                         <label for="txtcorreo" class="form-label">Correo</label>
-                        <input type="text" class="form-control" id="txtcorreo" placeholder="junior@example.com">
+                        <input type="text" class="form-control" id="txtcorreo" autocomplete="off" placeholder="junior@example.com">
                     </div>
 
                     <div class="col-sm-6">
@@ -77,8 +77,17 @@
                         </select>
                     </div>
 
+
+
+                    </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div id="messageError" class="alert alert-danger" role="alert">
+                            A simple danger alert—check it out!
+                        </div>
+
+                    </div>
                 </div>
-            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 <button type="button" class="btn btn-primary" onclick="save()"> Guardar</button>
@@ -86,12 +95,14 @@
         </div>
     </div>
 </div>
+    </div>
 
 
 @section scripts{
     <script>
 
         var datatable;
+        var selectedRow;
 
         datatable = $("#table").DataTable({
             responsive: true,
@@ -114,7 +125,7 @@
 
                         } else {
 
-                            return '<span class=""badge bg-danger">No</span>'
+                            return '<span class="badge bg-danger">No</span>'
 
                         }
                     },
@@ -122,7 +133,7 @@
                 },
                 {
                     "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-edit"> <i class="fas fa-pen me-1"></i></button>  ' +
-                        '<button type="button" class="btn btn-danger btn-sm sm-2"> <i class="fas fa-trash me-1"></i></button>',
+                        '<button type="button" class="btn btn-danger btn-sm sm-2 btn-delete"> <i class="fas fa-trash me-1"></i></button>',
                     "orderable": false,
                     "searchable": false,
                     "width": "80px"
@@ -137,13 +148,15 @@
 
         function openModal(json) {
 
-            
+
 
             $("#txtid").val(0)
             $("#txtnombres").val("")
             $("#txtapellidos").val("")
             $("#txtcorreo").val("")
             $("#cboactivo").val(1)
+            $("#messageError").hide()
+
 
             if (json != null) {
 
@@ -160,29 +173,132 @@
 
         $("#table tbody").on("click", ".btn-edit", function () {
 
-            var selectedRow = $(this).closest("tr")
+             selectedRow = $(this).closest("tr")
             var data = datatable.row(selectedRow).data()
 
             openModal(data)
         })
 
+        
+
+        $("#table tbody").on("click", ".btn-delete", function () {
+
+            var selectedUser = $(this).closest("tr")
+            var data = datatable.row(selectedUser).data()
+            
+
+            swal({
+                title: "Esta Seguro?",
+                text: "¿Desea eliminar el usuario?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-primary",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                closeOnConfirm: true
+
+            },
+                function () {
+
+                jQuery.ajax({
+                url: '@Url.Action("DeleteUsers", "Home")',
+                type: "POST",
+                data: JSON.stringify({ id: data.IdUsuario }),
+                dataType: "json",
+                contentType: "application/json; charset-utf-8",
+                success: function (data) {
+
+                    if (data.result) {
+
+                        datatable.row(selectedUser).remove().draw()
+                    } else {
+                        swal("No se pudo eliminar", data.message, "error")
+                    }
+
+
+
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+
+            });
+                })
+        })
+
         function save() {
 
-            var usuario = {
+            var user = {
 
                 IdUsuario: $("#txtid").val(),
                 Activo: $("#cboactivo").val() == 1 ? true: false ,
                 Apellidos: $("#txtapellidos").val(),
                 Correo: $("#txtcorreo").val(),
-                Nombres: $("#txtnombres").val(json.Nombres)
+                Nombres: $("#txtnombres").val()
 
 
             }
-          
-           
+            jQuery.ajax({
+                url: '@Url.Action("StoredUsers", "Home")',
+                type: "POST",
+                data: JSON.stringify({ obj: user }),
+                dataType: "json",
+                contentType: "application/json; charset-utf-8",
+                success: function (data) {
+
+                    if (user.IdUsuario == 0) {
+
+                        if (data.result != 0) {
+                            user.IdUsuario = data.result;
+                            datatable.row.add(user).draw(false);
+                            $("#formModal").modal("hide");
+
+                        } else {
+
+                            $("#messageError").text(data.message)
+                            $("#messageError").show()
+                        }
+
+                    }
+                    else {
+
+                        if (data.result) {
+
+                            datatable.row(selectedRow).data(user).draw(false)
+                            selectedRow = null;
+                            $("#formModal").modal("hide");
+
+                        } else {
+
+                            $("#messageError").text(data.message)
+                            $("#messageError").show()
+
+                        }
+                    }
+
+
+
+                },
+                error: function (error) {
+                    $(".modal-body").LoadingOverlay("hide")
+                    $("#messageError").text("Error Ajax")
+                    $("#messageError").show()
+
+                },
+                beforeSend: function () {
+                    $(".modal-body").LoadingOverlay("show", {
+                        imageResizeFactor: 2,
+                        text: "Cargando....",
+                        size: 14
+                    })
+                }
+
+            });
+
+
 
         }
-       
+
 
     </script>
 }

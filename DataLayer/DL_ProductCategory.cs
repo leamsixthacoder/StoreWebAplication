@@ -7,20 +7,20 @@ using System.Data.SqlClient;
 using System.Data;
 using EntityLayer;
 
-
 namespace DataLayer
 {
-    public class DL_Users
+    public class DL_ProductCategory
     {
-        public List<User> List()
+
+        public List<ProductCategory> List()
         {
-            List<User> list = new List<User>();
+            List<ProductCategory> list = new List<ProductCategory>();
 
             try
             {
                 using (SqlConnection oconection = new SqlConnection(DataBaseConnection.cn))
                 {
-                    string query = "select Idusuario, Nombres, Apellidos, Correo, Clave, Restablecer, Activo from usuario";
+                    string query = "SELECT IdCategoria, Descripcion, Activo FROM categoria";
                     SqlCommand cmd = new SqlCommand(query, oconection);
                     cmd.CommandType = CommandType.Text;
                     oconection.Open();
@@ -29,32 +29,28 @@ namespace DataLayer
                     {
                         while (reader.Read())
                         {
-                            list.Add(new User()
+                            list.Add(new ProductCategory()
                             {
-                                IdUsuario = Convert.ToInt32(reader["IdUsuario"]),   
-                                Nombres = reader["Nombres"].ToString(),
-                                Apellidos = reader["Apellidos"].ToString(),
-                                Correo = reader["Correo"].ToString(),
-                                Clave = reader["Clave"].ToString(),
-                                Restablecer = Convert.ToBoolean(reader["Restablecer"]),
+                                IdCategoria = Convert.ToInt32(reader["IdCategoria"]),
+                                Descripcion = reader["Descripcion"].ToString(),
                                 Activo = Convert.ToBoolean(reader["Activo"])
 
                             });
                         }
                     }
-                   
+
                 }
 
 
-            }catch 
+            }
+            catch
             {
-                list = new List<User>();
+                list = new List<ProductCategory>();
             }
             return list;
 
         }
-
-        public int Enrol(User obj, out string Message)
+        public int Enrol(ProductCategory obj, out string Message)
         {
             int idautogenerate = 0;
             Message = string.Empty;
@@ -62,13 +58,10 @@ namespace DataLayer
             {
                 using (SqlConnection oconection = new SqlConnection(DataBaseConnection.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("sp_EnrolUser",oconection);
-                    cmd.Parameters.AddWithValue("name",obj.Nombres);
-                    cmd.Parameters.AddWithValue("lastname", obj.Apellidos);
-                    cmd.Parameters.AddWithValue("email", obj.Correo);
-                    cmd.Parameters.AddWithValue("password", obj.Clave);
+                    SqlCommand cmd = new SqlCommand("sp_InsertCategory", oconection);
+                    cmd.Parameters.AddWithValue("description", obj.Descripcion);
                     cmd.Parameters.AddWithValue("active", obj.Activo);
-                    cmd.Parameters.Add("result",SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("result", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("message", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
                     cmd.CommandType = CommandType.StoredProcedure;
 
@@ -88,7 +81,7 @@ namespace DataLayer
             return idautogenerate;
         }
 
-        public bool Edit(User obj, out string Message)
+        public bool Edit(ProductCategory obj, out string Message)
         {
             bool result = false;
             Message = string.Empty;
@@ -96,11 +89,9 @@ namespace DataLayer
             {
                 using (SqlConnection oconection = new SqlConnection(DataBaseConnection.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("sp_EditUser", oconection);
-                    cmd.Parameters.AddWithValue("iduser", obj.IdUsuario);
-                    cmd.Parameters.AddWithValue("name", obj.Nombres);
-                    cmd.Parameters.AddWithValue("lastname", obj.Apellidos);
-                    cmd.Parameters.AddWithValue("email", obj.Correo);
+                    SqlCommand cmd = new SqlCommand("sp_EditCategory", oconection);
+                    cmd.Parameters.AddWithValue("@idCategory", obj.IdCategoria);
+                    cmd.Parameters.AddWithValue("description", obj.Descripcion);
                     cmd.Parameters.AddWithValue("active", obj.Activo);
                     cmd.Parameters.Add("result", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("message", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
@@ -120,32 +111,37 @@ namespace DataLayer
                 Message = ex.Message;
             }
             return result;
-        } 
+        }
 
         public bool Delete(int id, out string Message)
         {
-
             bool result = false;
             Message = string.Empty;
-
             try
             {
-                using(SqlConnection oconnection = new SqlConnection(DataBaseConnection.cn))
+                using (SqlConnection oconection = new SqlConnection(DataBaseConnection.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("delete top (1) from usuario where IdUsuario = @id", oconnection);
-                    cmd.Parameters.AddWithValue("@id", id);
-                    cmd.CommandType = CommandType.Text;
-                    oconnection.Open();
-                    result = cmd.ExecuteNonQuery() > 0 ? true : false;
+                    SqlCommand cmd = new SqlCommand("sp_deleteCategory", oconection);
+                    cmd.Parameters.AddWithValue("idCategory", id);
+                    cmd.Parameters.Add("result", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("message", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    cmd.CommandType = CommandType.StoredProcedure;
 
+                    oconection.Open();
+
+                    cmd.ExecuteNonQuery();
+
+                    result = Convert.ToBoolean(cmd.Parameters["result"].Value);
+                    Message = cmd.Parameters["message"].Value.ToString();
                 }
             }
             catch (Exception ex)
             {
-                result=false;
+                result = false;
                 Message = ex.Message;
             }
             return result;
         }
     }
 }
+
