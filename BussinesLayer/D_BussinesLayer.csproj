@@ -41,6 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BL_Product.cs" />
+    <Compile Include="BL_ProductBrand.cs" />
+    <Compile Include="BL_ProductCategory.cs" />
+    <Compile Include="BL_Report.cs" />
+    <Compile Include="BL_Resources.cs" />
     <Compile Include="BL_Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -39,9 +39,6 @@ namespace DataLayer
                                 Restablecer = Convert.ToBoolean(reader["Restablecer"]),
                                 Activo = Convert.ToBoolean(reader["Activo"])
 
-
-
-
                             });
                         }
                     }
@@ -55,6 +52,100 @@ namespace DataLayer
             }
             return list;
 
+        }
+
+        public int Enrol(User obj, out string Message)
+        {
+            int idautogenerate = 0;
+            Message = string.Empty;
+            try
+            {
+                using (SqlConnection oconection = new SqlConnection(DataBaseConnection.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_EnrolUser",oconection);
+                    cmd.Parameters.AddWithValue("name",obj.Nombres);
+                    cmd.Parameters.AddWithValue("lastname", obj.Apellidos);
+                    cmd.Parameters.AddWithValue("email", obj.Correo);
+                    cmd.Parameters.AddWithValue("password", obj.Clave);
+                    cmd.Parameters.AddWithValue("active", obj.Activo);
+                    cmd.Parameters.Add("result",SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("message", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    oconection.Open();
+
+                    cmd.ExecuteNonQuery();
+
+                    idautogenerate = Convert.ToInt32(cmd.Parameters["result"].Value);
+                    Message = cmd.Parameters["message"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                idautogenerate = 0;
+                Message = ex.Message;
+            }
+            return idautogenerate;
+        }
+
+        public bool Edit(User obj, out string Message)
+        {
+            bool result = false;
+            Message = string.Empty;
+            try
+            {
+                using (SqlConnection oconection = new SqlConnection(DataBaseConnection.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_EditUser", oconection);
+                    cmd.Parameters.AddWithValue("iduser", obj.IdUsuario);
+                    cmd.Parameters.AddWithValue("name", obj.Nombres);
+                    cmd.Parameters.AddWithValue("lastname", obj.Apellidos);
+                    cmd.Parameters.AddWithValue("email", obj.Correo);
+                    cmd.Parameters.AddWithValue("active", obj.Activo);
+                    cmd.Parameters.Add("result", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("message", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    oconection.Open();
+
+                    cmd.ExecuteNonQuery();
+
+                    result = Convert.ToBoolean(cmd.Parameters["result"].Value);
+                    Message = cmd.Parameters["message"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                result = false;
+                Message = ex.Message;
+            }
+            return result;
+        } 
+
+        public bool Delete(int id, out string Message)
+        {
+
+            bool result = false;
+            Message = string.Empty;
+
+            try
+            {
+                using(SqlConnection oconnection = new SqlConnection(DataBaseConnection.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("delete top (1) from usuario where IdUsuario = @id", oconnection);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.CommandType = CommandType.Text;
+                    oconnection.Open();
+                    result = cmd.ExecuteNonQuery() > 0 ? true : false;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                result=false;
+                Message = ex.Message;
+            }
+            return result;
         }
     }
 }

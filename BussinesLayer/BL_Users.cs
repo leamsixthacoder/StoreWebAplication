@@ -12,8 +12,86 @@ namespace BussinesLayer
     {
         private DL_Users objDataLayer = new DL_Users();
 
-        public List<User> List() { 
+        public List<User> List()
+        {
             return objDataLayer.List();
+        }
+
+        public int Enrol(User obj, out string Message){
+
+            Message = String.Empty;
+            if (string.IsNullOrEmpty(obj.Nombres) || string.IsNullOrWhiteSpace(obj.Nombres))
+            {
+                Message = "El nombre del usuario no puede ser vacio";
+            }
+            else if (string.IsNullOrEmpty(obj.Apellidos) || string.IsNullOrWhiteSpace(obj.Apellidos))
+            {
+                Message = "El apellido del usuario no puede ser vacio";
+            }
+            else if (string.IsNullOrEmpty(obj.Correo) || string.IsNullOrWhiteSpace(obj.Correo))
+            {
+                Message = "El correo del usuario no puede ser vacio";
+            }
+
+            if (string.IsNullOrEmpty(Message))
+            {
+                string password = BL_Resources.GeneratedPass();
+
+                string subject = "Creacion de Cuenta";
+                string mail_message = "<h3> Su cuenta fue creada correctamente</h3></br><p>Su contraseña para acceder es:  !password! <p>";
+                mail_message = mail_message.Replace(" !password! ", password);
+
+                bool answer = BL_Resources.SendMail(obj.Correo, subject, mail_message);
+
+                if (answer)
+                {
+                    obj.Clave = BL_Resources.ConvertSha256(password);
+                    return objDataLayer.Enrol(obj, out Message);
+                }
+                else
+                {
+                    Message = "No se pudo enviar el correo";
+                    return 0;
+                }
+
+
+            }
+            else
+            {
+                return 0;
+            }
+
+        }
+
+        public bool Edit(User obj, out string Message){
+
+            Message = String.Empty;
+            if (string.IsNullOrEmpty(obj.Nombres) || string.IsNullOrWhiteSpace(obj.Nombres))
+            {
+                Message = "El nombre del usuario no puede ser vacio";
+            }
+            else if (string.IsNullOrEmpty(obj.Apellidos) || string.IsNullOrWhiteSpace(obj.Apellidos))
+            {
+                Message = "El apellido del usuario no puede ser vacio";
+            }
+            else if (string.IsNullOrEmpty(obj.Correo) || string.IsNullOrWhiteSpace(obj.Correo))
+            {
+                Message = "El correo del usuario no puede ser vacio";
+            }
+
+            if (string.IsNullOrEmpty(Message))
+            {
+                return objDataLayer.Edit(obj, out Message);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool Delete(int id, out string Message){
+
+            return objDataLayer.Delete(id, out Message);
         }
     }
 }
