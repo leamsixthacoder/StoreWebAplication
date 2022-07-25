@@ -19,7 +19,7 @@ namespace BussinesLayer
         {
 
             Message = String.Empty;
-            if (string.IsNullOrEmpty(obj.Nombre) || string.IsNullOrWhiteSpace(obj.Descripcion))
+            if (string.IsNullOrEmpty(obj.Nombre) || string.IsNullOrWhiteSpace(obj.Nombre))
             {
                 Message = "El nombre del producto no puede ser vacio";
             }
@@ -30,10 +30,6 @@ namespace BussinesLayer
             else if (obj.oMarca.IdMarca == 0)
             {
                 Message = "Debe seleccionar una marca";
-            }
-            else if (obj.oCategoria.IdCategoria == 0)
-            {
-                Message = "Debe seleccionar una categoria";
             }
             else if (obj.oCategoria.IdCategoria == 0)
             {
@@ -63,7 +59,7 @@ namespace BussinesLayer
         {
 
             Message = String.Empty;
-            if (string.IsNullOrEmpty(obj.Nombre) || string.IsNullOrWhiteSpace(obj.Descripcion))
+            if (string.IsNullOrEmpty(obj.Nombre) || string.IsNullOrWhiteSpace(obj.Nombre))
             {
                 Message = "El nombre del producto no puede ser vacio";
             }
@@ -74,10 +70,6 @@ namespace BussinesLayer
             else if (obj.oMarca.IdMarca == 0)
             {
                 Message = "Debe seleccionar una marca";
-            }
-            else if (obj.oCategoria.IdCategoria == 0)
-            {
-                Message = "Debe seleccionar una categoria";
             }
             else if (obj.oCategoria.IdCategoria == 0)
             {

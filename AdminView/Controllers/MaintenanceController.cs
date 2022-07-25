@@ -127,7 +127,6 @@ namespace AdminView.Controllers
         [HttpPost]
         public JsonResult StoredProduct(string obj, HttpPostedFileBase imageFile)
         {
-            object result;
             string message = string.Empty;
             bool succesfull_operation = true;
             bool succesfull_image_stored = true;

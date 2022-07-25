@@ -81,8 +81,8 @@ namespace DataLayer
                     cmd.Parameters.AddWithValue("description", obj.Descripcion);
                     cmd.Parameters.AddWithValue("idbrand", obj.oMarca.IdMarca);
                     cmd.Parameters.AddWithValue("idcategory", obj.oCategoria.IdCategoria);
-                    cmd.Parameters.AddWithValue("price", obj.Descripcion);
-                    cmd.Parameters.AddWithValue("stock", obj.Descripcion);
+                    cmd.Parameters.AddWithValue("price", obj.Precio);
+                    cmd.Parameters.AddWithValue("stock", obj.Stock);
                     cmd.Parameters.AddWithValue("active", obj.Activo);
                     cmd.Parameters.Add("result", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("message", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
@@ -119,8 +119,8 @@ namespace DataLayer
                     cmd.Parameters.AddWithValue("description", obj.Descripcion);
                     cmd.Parameters.AddWithValue("idbrand", obj.oMarca.IdMarca);
                     cmd.Parameters.AddWithValue("idcategory", obj.oCategoria.IdCategoria);
-                    cmd.Parameters.AddWithValue("price", obj.Descripcion);
-                    cmd.Parameters.AddWithValue("stock", obj.Descripcion);
+                    cmd.Parameters.AddWithValue("price", obj.Precio);
+                    cmd.Parameters.AddWithValue("stock", obj.Stock);
                     cmd.Parameters.AddWithValue("active", obj.Activo);
                     cmd.Parameters.Add("result", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("message", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;

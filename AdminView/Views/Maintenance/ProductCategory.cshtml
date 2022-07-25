@@ -225,6 +225,8 @@
                 contentType: "application/json; charset-utf-8",
                 success: function (data) {
 
+                    $(".modal-body").LoadingOverlay("hide")
+
                     if (productcategory.IdCategoria == 0) {
 
                         if (data.result != 0) {

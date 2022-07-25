@@ -45,6 +45,7 @@
     <Compile Include="DL_Product.cs" />
     <Compile Include="DL_ProductBrand.cs" />
     <Compile Include="DL_ProductCategory.cs" />
+    <Compile Include="DL_Report.cs" />
     <Compile Include="DL_Users.cs" />
     <Compile Include="DataBaseConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

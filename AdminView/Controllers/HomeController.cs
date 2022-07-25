@@ -5,6 +5,9 @@ using System.Web;
 using System.Web.Mvc;
 using EntityLayer;
 using BussinesLayer;
+using System.Data;
+using ClosedXML.Excel;
+using System.IO;
 
 namespace AdminView.Controllers
 {
@@ -56,8 +59,84 @@ namespace AdminView.Controllers
 
             result = new BL_Users().Delete(id, out message);
 
-            return Json (new { result = result, message }, JsonRequestBehavior.AllowGet);
+            return Json(new { result = result, message }, JsonRequestBehavior.AllowGet);
 
         }
+
+
+        [HttpGet]
+
+        public JsonResult ListReport(string startdate, string finishdate, string idtransaction)
+        {
+
+            List<Report> olist = new List<Report>();
+
+            olist = new BL_Report().Ventas(startdate, finishdate, idtransaction);
+
+            return Json(new { data = olist }, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+
+        [HttpGet]
+
+        public JsonResult ViewDashboard()
+        {
+            Dashboard objeto = new BL_Report().ShowDashboard();
+            return Json(new { result = objeto }, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpPost]
+
+        public FileResult ExportVenta(string startdate, string finishdate, string idtransaction)
+        {
+            List<Report> olist = new List<Report>();
+
+            olist = new BL_Report().Ventas(startdate, finishdate, idtransaction);
+
+            DataTable dt = new DataTable();
+            dt.Columns.Add("FechaVenta", typeof(string));
+            dt.Columns.Add("Cliente", typeof(string));
+            dt.Columns.Add("Producto", typeof(string));
+            dt.Columns.Add("Precio", typeof(decimal));
+            dt.Columns.Add("Cantidad", typeof(int));
+            dt.Columns.Add("Total", typeof(decimal));
+            dt.Columns.Add("IdTransaccion", typeof(string));
+
+            foreach(Report report in olist)
+            {
+                dt.Rows.Add(new object[]
+                {
+                    report.FechaVenta,
+                    report.Cliente,
+                    report.Producto,
+                    report.Precio,
+                    report.Cantidad,
+                    report.Total,
+                    report.IdTransaccion
+                });
+            }
+
+
+            dt.TableName = "Datos";
+
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt);
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteVenta" + DateTime.Now.ToString() + ".xlsx");
+                }
+            }
+
+        }
+
+
+
+
     }
+
 }
