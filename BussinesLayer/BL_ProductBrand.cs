@@ -59,6 +59,11 @@ namespace BussinesLayer
 
             return objDataLayer.Delete(id, out Message);
         }
+        public List<ProductBrand> ListBrandforCategory(int idcategory)
+        {
+            return objDataLayer.ListBrandforCategory(idcategory);
+        }
+
 
     }
 }

@@ -48,7 +48,7 @@
                 <h5 class="modal-title" id="exampleModalLabel">Usuario</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body ">
+            <div class="modal-body">
 
                 <input id="txtid" type="hidden" value="0" />
                 <div class="row g-2">
@@ -245,6 +245,9 @@
                 dataType: "json",
                 contentType: "application/json; charset-utf-8",
                 success: function (data) {
+
+                    $(".modal-body").LoadingOverlay("hide");
+
 
                     if (user.IdUsuario == 0) {
 

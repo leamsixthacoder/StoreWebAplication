@@ -145,5 +145,48 @@ namespace DataLayer
             }
             return result;
         }
+
+        public List<ProductBrand> ListBrandforCategory(int idcategory)
+        {
+            List<ProductBrand> list = new List<ProductBrand>();
+
+            try
+            {
+                using (SqlConnection oconection = new SqlConnection(DataBaseConnection.cn))
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendLine("select distinct m.IdMarca, m.Descripcion from producto p");
+                    sb.AppendLine("inner join categoria c on c.IdCategoria = p.IdCategoria");
+                    sb.AppendLine("inner join marca m on m.IdMarca = p.IdMarca and m.Activo = 1");
+                    sb.AppendLine("where c.IdCategoria = iif(@idcategory = 0, c.IdCategoria, @idcategory)");
+
+                    SqlCommand cmd = new SqlCommand(sb.ToString(), oconection);
+                    cmd.Parameters.AddWithValue("@idcategory",idcategory);
+                    cmd.CommandType = CommandType.Text;
+                    oconection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            list.Add(new ProductBrand()
+                            {
+                                IdMarca = Convert.ToInt32(reader["IdMarca"]),
+                                Descripcion = reader["Descripcion"].ToString()
+                            });
+                        }
+                    }
+
+                }
+
+
+            }
+            catch
+            {
+                list = new List<ProductBrand>();
+            }
+            return list;
+
+        }
     }
 }

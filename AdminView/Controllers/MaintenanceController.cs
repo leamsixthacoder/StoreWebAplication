@@ -11,6 +11,7 @@ using System.IO;
 
 namespace AdminView.Controllers
 {
+    [Authorize]
     public class MaintenanceController : Controller
     {
         // GET: Maintenance

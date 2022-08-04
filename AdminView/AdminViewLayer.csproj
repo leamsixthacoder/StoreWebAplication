@@ -130,6 +130,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AccessController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Global.asax.cs">
@@ -505,6 +506,9 @@
     <Content Include="Views\Maintenance\ProductCategory.cshtml" />
     <Content Include="Views\Maintenance\ProductBrand.cshtml" />
     <Content Include="Views\Maintenance\Product.cshtml" />
+    <Content Include="Views\Access\Index.cshtml" />
+    <Content Include="Views\Access\ChangePassword.cshtml" />
+    <Content Include="Views\Access\Reset.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

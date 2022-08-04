@@ -147,5 +147,61 @@ namespace DataLayer
             }
             return result;
         }
+
+        public bool ChangePassword(int iduser, string newpassword, out string Message)
+        {
+
+            bool result = false;
+            Message = string.Empty;
+
+            try
+            {
+                using (SqlConnection oconnection = new SqlConnection(DataBaseConnection.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("update usuario set clave = @newpassword, Restablecer = 0 where idusuario = @iduser", oconnection);
+                    cmd.Parameters.AddWithValue("@iduser", iduser);
+                    cmd.Parameters.AddWithValue("@newpassword", newpassword);
+
+                    cmd.CommandType = CommandType.Text;
+                    oconnection.Open();
+                    result = cmd.ExecuteNonQuery() > 0 ? true : false;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                result = false;
+                Message = ex.Message;
+            }
+            return result;
+        }
+
+        public bool ResetPassword(int iduser, string password, out string Message)
+        {
+
+            bool result = false;
+            Message = string.Empty;
+
+            try
+            {
+                using (SqlConnection oconnection = new SqlConnection(DataBaseConnection.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("update usuario set clave = @newpassword, Restablecer = 1 where IdUsuario = @iduser", oconnection);
+                    cmd.Parameters.AddWithValue("@iduser", iduser);
+                    cmd.Parameters.AddWithValue("@newpassword", password); 
+                    cmd.CommandType = CommandType.Text;
+                    oconnection.Open();
+                    result = cmd.ExecuteNonQuery() > 0 ? true : false;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                result = false;
+                Message = ex.Message;
+            }
+            return result;
+        }
     }
+
 }

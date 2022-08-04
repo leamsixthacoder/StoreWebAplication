@@ -14,7 +14,7 @@ namespace BussinesLayer
 
         public static string GeneratedPass()
         {
-            string password = Guid.NewGuid().ToString("N").Substring(0,8);
+            string password = Guid.NewGuid().ToString("N").Substring(0,6);
             return password;
         }
         public static string ConvertSha256(string text)
