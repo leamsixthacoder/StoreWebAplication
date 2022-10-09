@@ -6,12 +6,20 @@ using System.Web.Mvc;
 using BussinesLayer;
 using EntityLayer;
 using System.IO;
+using System.Threading.Tasks;
+using System.Data;
+
 namespace StoreView.Controllers
 {
     public class ShopController : Controller
     {
         // GET: Shop
         public ActionResult Index()
+        {
+            return View();
+        }
+
+        public ActionResult Cart()
         {
             return View();
         }
@@ -81,5 +89,189 @@ namespace StoreView.Controllers
             jsonresult.MaxJsonLength = int.MaxValue;
             return jsonresult;
         }
+
+        [HttpPost]
+
+        public JsonResult AddCart(int idproduct)
+        {
+            int idclient = ((Client)Session["Cliente"]).IdCliente;
+
+            bool exists = new BL_Cart().ExistCart(idclient, idproduct);
+
+            bool result = false;
+            string message = string.Empty;
+
+            if (exists)
+            {
+                message = "El producto ya existe en el carrito";
+            }
+            else
+            {
+                result = new BL_Cart().CartOperation(idclient, idproduct, true, out message);
+
+            }
+
+            return Json(new {result = result, message = message }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult CartAmount()
+        {
+            int idclient = ((Client)Session["Cliente"]).IdCliente;
+            int amount = new BL_Cart().CartAmount(idclient);
+
+            return Json(new { amount = amount }, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpPost]
+
+        public JsonResult ListCartProducts()
+        {
+            int idclient = ((Client)Session["Cliente"]).IdCliente;
+
+            List<Cart> oList = new List<Cart>();
+
+            bool conversion;
+
+            oList =  new BL_Cart().List(idclient).Select(oc => new Cart() { 
+            
+                oProducto = new Product()
+                {
+                    IdProducto = oc.oProducto.IdProducto,
+                    Nombre = oc.oProducto.Nombre,
+                    oMarca = oc.oProducto.oMarca,
+                    Precio = oc.oProducto.Precio,
+                    RutaImagen = oc.oProducto.RutaImagen,
+                    NombreImagen = oc.oProducto.NombreImagen,
+                    Base64 = BL_Resources.ConvertBase64( Path.Combine(oc.oProducto.RutaImagen, oc.oProducto.NombreImagen), out conversion),
+                    Extension = Path.GetExtension(oc.oProducto.NombreImagen)
+                },
+                Cantidad = oc.Cantidad
+            }).ToList();
+
+            return Json(new { data = oList }, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+
+
+        [HttpPost]
+
+        public JsonResult CartOperation(int idproduct, bool sumar)
+        {
+            int idclient = ((Client)Session["Cliente"]).IdCliente;
+
+            bool result = false;
+            string message = string.Empty;
+
+            result = new BL_Cart().CartOperation(idclient, idproduct, sumar, out message);
+
+            return Json(new { result = result, message = message }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+
+        public JsonResult DeleteCart(int idproduct)
+        {
+            int idclient = ((Client)Session["Cliente"]).IdCliente;
+
+            bool result = false;
+            string message = string.Empty;
+
+            result = new BL_Cart().Delete(idclient, idproduct);
+
+            return Json(new { result = result, message = message }, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpPost]
+        public JsonResult GetDepartments()
+        {
+            List<Department> oList = new List<Department>();
+            oList = new BL_Location().GetDepartments();
+            return Json(new { list = oList }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetProvincias(string IdDepartment)
+        {
+            List<Provincia> oList = new List<Provincia>();
+            oList = new BL_Location().GetProvincias(IdDepartment);
+            return Json(new { list = oList }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetDistritic(string IdProvincia,string IdDepartment)
+        {
+            List<Distritic> oList = new List<Distritic>();
+            oList = new BL_Location().GetDistritics(IdProvincia, IdDepartment);
+            return Json(new { list = oList }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+
+        public async Task<JsonResult> PaymentProccess(List<Cart> ocartList, Sale sale)
+        {
+            decimal total = 0;
+
+            DataTable sale_detail = new DataTable();
+            sale_detail.Locale = new System.Globalization.CultureInfo("en-US");
+            sale_detail.Columns.Add("IdProduct", typeof(string));
+            sale_detail.Columns.Add("Cant",typeof(int));
+            sale_detail.Columns.Add("Total",typeof(decimal));
+       
+            foreach (Cart ocart in ocartList)
+            {
+                decimal subtotal = Convert.ToDecimal(ocart.Cantidad.ToString()) * ocart.oProducto.Precio;
+
+                total += subtotal;
+                sale_detail.Rows.Add(new object[]
+                {
+                    ocart.oProducto.IdProducto,
+                    ocart.Cantidad,
+                    subtotal
+                });
+            }
+
+            sale.MontoTotal = total;
+            sale.IdCliente = ((Client)Session["Cliente"]).IdCliente;
+
+            TempData["Sale"] = sale;
+            TempData["SaleDetail"] = sale_detail;
+
+            return Json(new { Status = true, Link = "/Shop/Paymentmade?idTransaccion=code0001&status=true" }, JsonRequestBehavior.AllowGet);
+
+        }
+
+        public async Task<ActionResult> Paymentmade()
+        {
+
+            string idtransaccion = Request.QueryString["idTransaccion"];
+            bool status = Convert.ToBoolean(Request.QueryString["status"]);
+
+
+            ViewData["Status"] = status;
+
+            if(status)
+            {
+                Sale oSale = (Sale)TempData["Sale"];
+
+                DataTable sale_detail = (DataTable)TempData["SaleDetail"];
+
+                oSale.idTransaccion = idtransaccion;
+
+                string message = string.Empty;
+
+                bool response = new BL_Sales().Enroll(oSale, sale_detail, out message);
+
+                ViewData["IdTransaccion"] = oSale.idTransaccion;
+            }
+
+            return View();
+        }
+
     }
+
 }

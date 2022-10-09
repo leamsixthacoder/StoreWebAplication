@@ -42,14 +42,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cart.cs" />
-    <Compile Include="Check.cs" />
-    <Compile Include="CheckDetail.cs" />
+    <Compile Include="Paypal\Checkout_Order.cs" />
+    <Compile Include="Paypal\Response_Capture.cs" />
+    <Compile Include="Paypal\Response_Checkout.cs" />
+    <Compile Include="Paypal\Response_Paypal.cs" />
+    <Compile Include="Sale.cs" />
+    <Compile Include="SaleDetail.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Dashboard.cs" />
+    <Compile Include="Department.cs" />
+    <Compile Include="Distritic.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="ProductBrand.cs" />
     <Compile Include="ProductCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Provincia.cs" />
     <Compile Include="Report.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>

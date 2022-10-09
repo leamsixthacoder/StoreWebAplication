@@ -43,7 +43,7 @@ namespace DataLayer
                                 IdProducto = Convert.ToInt32(reader["IdProducto"]),
                                 Nombre = reader["Nombre"].ToString(),
                                 Descripcion = reader["Descripcion"].ToString(),
-                                oMarca = new ProductBrand() { IdMarca = Convert.ToInt32(reader["IdMarca"]), Descripcion = reader["DesCategoria"].ToString() },
+                                oMarca = new ProductBrand() { IdMarca = Convert.ToInt32(reader["IdMarca"]), Descripcion = reader["DesMarca"].ToString() },
                                 oCategoria = new ProductCategory() { IdCategoria = Convert.ToInt32(reader["IdCategoria"]), Descripcion = reader["DesCategoria"].ToString() },
                                 Precio = Convert.ToDecimal(reader["Precio"]),
                                 Stock = Convert.ToInt32(reader["Stock"]),

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace EntityLayer
 {
 
-    public class Check
+    public class Sale
     {
         public int IdVenta { get; set; }
         public int IdCliente { get; set; }
@@ -21,7 +21,7 @@ namespace EntityLayer
         public string FechaTexto { get; set; }
         public string idTransaccion { get; set; }
 
-        public List<CheckDetail> ocheckDetails { get; set; }
+        public List<SaleDetail> ocheckDetails { get; set; }
 
 
 

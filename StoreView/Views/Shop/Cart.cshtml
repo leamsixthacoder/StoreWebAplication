@@ -1,0 +1,462 @@
+﻿
+@{
+    ViewBag.Title = "Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="row">
+                        <!--Detail Product-->
+                        <div class="col-sm-9">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="ms-2 mt-2">Detalle Carrito</h5>
+                                <a class="btn btn-primary" href="@Url.Action("Index","Shop")"><i class="fas fa-cart-plus"></i> Seguir Comprando</a>
+                            </div>
+                            <hr class="mt-2 mb-2" />
+                            <div id="product-cart">
+
+                                @*<div class="card mb-2 card-product" >
+                                    <div class="card-body">
+                                        <div class="row">
+
+                                            <div class="col-sm-2 align-self-center d-flex justify-content-center">
+                                                <img class="rounded" src="https://imgs.search.brave.com/Q2aCycvYIhk1-YGFAWfx8ybEoTFf_DAWgIwAUn_qb_w/rs:fit:1200:1058:1/g:ce/aHR0cHM6Ly93d3cu/ZGViYXRlLmNvbS5t/eC9fX2V4cG9ydC8x/NTU0MDU2NDU1NTUx/L3NpdGVzL2RlYmF0/ZS9pbWcvMjAxOS8w/My8zMS8xMS5wbmdf/MjA0ODE1NTU0MS5w/bmc" style="width:100px; height:100px" />
+                                            </div>
+
+                                            <div class="col-sm-4 align-self-center">
+                                                <span class="font-wight-bold d-block">Marca</span>
+                                                <span></span>
+                                            </div>
+
+                                            <div class="col-sm-2 align-self-center">
+                                                <span>Precio : S/. 1500</span>
+                                            </div>
+
+                                            <div class="col-sm-2 align-self-center">
+                                                <div class="d-flex">
+
+                                                    <button class="btn btn-outline-secondary btn-restar rounded-0">
+                                                        <i class="fas fa-minus"></i>
+                                                    </button>
+                                                    <input class="form-control input-cantidad p-1 text-center rounded-0" disabled style="width:40px"  />
+                                                    <button class="btn btn-outline-secondary btn-sumar rounded-0">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-2 align-self-center">
+                                                <button class="btn btn-outline-danger btn-delete"><i class="far fa-trash-alt"></i>Eliminar</button>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>*@
+
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button class="align-self-center"><b>Total: <span id="total">0</span></b></button>
+
+                            </div>
+
+                        </div>
+
+                        <!--Detail Product-->
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body bg-light">
+                                    <h5 class="card-title"> Detalle Envio</h5>
+                                    <form action="/" method="post">
+                                        <div class="mb-2">
+                                            <label for="cbodepartment" class="form-label">Ciudad: </label>
+                                            <select class="form-select form-select-sm" id="cbodepartment">
+]                                            </select>
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="cboprovincia" class="form-label">Provincia: </label>
+                                            <select class="form-select form-select-sm" id="cboprovincia">
+                                            </select>
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="cbodistritic" class="form-label">Urbanizacion: </label>
+                                            <select class="form-select form-select-sm" id="cbodistritic">
+                                            </select>
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="txtnombrecontacto" class="form-label">Nombre Contacto: </label>
+                                            <input type="text" class="form-control form-control-sm" id="txtnombrecontacto" />
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="txtdireccioncontacto" class="form-label">Direccion Contacto: </label>
+                                            <input type="text" class="form-control form-control-sm" id="txtdireccioncontacto" />
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="txttelefonocontacto" class="form-label">Telefono: </label>
+                                            <input type="text" class="form-control form-control-sm" id="txttelefonocontacto" />
+                                        </div>
+                                        <div class="d-grid">
+                                            <button class="btn btn-success" type="submit" onclick="Pay()">
+                                                <i class="fab fa-paypal"></i> Terminar y Procesar Pago
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    
+    <script>
+        $(document).ready(function () {
+
+            jQuery.ajax({
+                url: '@Url.Action("ListCartProducts", "Shop")',
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+
+                    $("#product-cart").html("");
+                    $("#product-cart").LoadingOverlay("hide");
+
+                    $.each(response.data, function (i, item) {
+                        $("<div>").addClass("card mb-2 card-product").append(
+                            $("<div>").addClass("card-body").append(
+                                $("<div>").addClass("row").append(
+
+                                    //1.-
+                                    $("<div>").addClass("col-sm-2 align-self-center d-flex justify-content-center").append(
+                                        $("<img>").addClass("rounded").attr({ "src": "data:image/" + item.oProducto.Extension + ";base64, " + item.oProducto.Base64 })
+                                            .css({ "width": "100px", "height": "80px" })
+                                    ),
+
+                                    //2.-
+                                    $("<div>").addClass("col-sm-4 align-self-center").append(
+                                        $("<span>").addClass("font-wight-bold d-block").text(item.oProducto.oMarca.Descripcion),
+                                        $("<span>").text(item.oProducto.Nombre)
+                                    ),
+
+                                    //3.-
+                                    $("<div>").addClass("col-sm-2 align-self-center").append(
+                                        $("<span>").text(item.oProducto.Precio.toFixed(2) + " USD")
+
+                                    ),
+
+                                    //4.-
+                                    $("<div>").addClass("col-sm-2 align-self-center").append(
+                                        $("<div>").addClass("d-flex").append(
+                                            $("<button>").addClass("btn btn-outline-secondary btn-restar rounded-0").append(
+                                                $("<i>").addClass("fas fa-minus")
+                                            ),
+                                            $("<input>").addClass("form-control input-cantidad p-1 text-center rounded-0").attr({ "disabled": "disabled" })
+                                                .css({ "width": "40px" })
+                                                .data("oProducto", item.oProducto)
+                                                .val(item.Cantidad),
+                                            $("<button>").addClass("btn btn-outline-secondary btn-sumar rounded-0").append(
+                                                $("<i>").addClass("fas fa-plus")
+                                            )
+
+                                        )
+                                    ),
+
+                                    $("<div>").addClass("col-sm-2 align-self-center").append(
+                                          $("<button>").addClass("btn btn-outline-danger btn-delete").append(
+                                              $("<i>").addClass("far fa-trash-alt"), "Eliminar"
+                                        ).data("idproduct", item.oProducto.IdProducto)
+                                    )
+                                )
+                            )
+
+                        ).appendTo("#product-cart")
+
+                    })
+                    sumarTotal();
+
+                },
+                error: function (error) {
+                    $("#product-cart").LoadingOverlay("hide");
+                },
+                beforeSend: function () {
+                    $("#product-cart").LoadingOverlay("show");
+
+                }
+            })
+
+            ListDepartments()
+        })
+
+
+        function ListDepartments() {
+
+            $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cbodepartment")
+
+
+            jQuery.ajax({
+                url: '@Url.Action("GetDepartments", "Shop")',
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    if (data.list != null) {
+                        $.each(data.list, function (i, item) {
+
+                            $("<option>").attr({ "value": item.IdDepartment}).text(item.Descripcion).appendTo("#cbodepartment")
+                        })
+                    }
+                }
+             });
+        }
+
+        $("#cbodepartment").on("change", function () {
+            ListProvincias()
+        })
+
+        function ListProvincias() {
+            $("#cboprovincia").html("")
+
+            $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cboprovincia")
+
+
+                jQuery.ajax({
+                    url: '@Url.Action("GetProvincias", "Shop")',
+                    type: "POST",
+                    data: JSON.stringify({IdDepartment: $("#cbodepartment option:selected").val()}),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        if (data.list != null) {
+                            $.each(data.list, function (i, item) {
+
+                                $("<option>").attr({ "value": item.IdProvincia }).text(item.Descripcion).appendTo("#cboprovincia")
+                            })
+                            ListDistritics()
+
+                        }
+                    }
+                 });
+        }
+          $("#cboprovincia").on("change", function () {
+              ListDistritics()
+        })
+
+        function ListDistritics() {
+            $("#cbodistritic").html("")
+
+            $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cbodistritic")
+
+
+                jQuery.ajax({
+                    url: '@Url.Action("GetDistritic", "Shop")',
+                    type: "POST",
+                    data: JSON.stringify({ IdProvincia: $("#cboprovincia option:selected").val() , IdDepartment: $("#cbodepartment option:selected").val() } ),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        if (data.list != null) {
+                            $.each(data.list, function (i, item) {
+
+                                $("<option>").attr({ "value": item.IdDistritic }).text(item.Descripcion).appendTo("#cbodistritic")
+                            })
+                        }
+                    }
+                 });
+        }
+
+
+        function sumarTotal() {
+
+            var sumaTotal = parseFloat(0)
+
+            $("input.input-cantidad").each(function (i) {
+                var precio = $(this).data("oProducto").Precio;
+                var cantidad = parseFloat($(this).val())
+
+                var subtotal = precio * cantidad;
+
+                sumaTotal += subtotal;
+            })
+
+            $("#total").text("$ " + sumaTotal.toFixed(2))
+            $("#total").data("sumatotal", sumaTotal)
+
+        }
+
+        $(document).on("click", ".btn-sumar", function () {
+
+            var div_container = $(this).parent("div.d-flex")
+            var input_cant = $(div_container).find("input.input-cantidad")
+            var btn = $(this)
+            var idproduct = $(input_cant).data("oProducto").IdProducto;
+
+
+            jQuery.ajax({
+                url: '@Url.Action("CartOperation", "Shop")',
+                type: "POST",
+                data: JSON.stringify({ idproduct: idproduct, sumar: true}),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    $(btn).LoadingOverlay("hide")
+
+                    if (data.result) {
+                        var cant = parseInt($(input_cant).val()) + 1
+                        $(input_cant).val(cant)
+                        sumarTotal()
+                    } else {
+                        swal("", data.message,"warning")
+                    }
+                },
+                beforeSend: function () {
+                    $(btn).LoadingOverlay("show")
+                },
+                error: function (error) {
+                    $(btn).LoadingOverlay("hide")
+                }
+            });
+
+        })
+
+        $(document).on("click", ".btn-restar", function () {
+
+            var div_container = $(this).parent("div.d-flex")
+            var input_cant = $(div_container).find("input.input-cantidad")
+            var btn = $(this)
+            var idproduct = $(input_cant).data("oProducto").IdProducto;
+            var cant = parseInt($(input_cant).val()) - 1
+
+            if (cant >= 1) {
+
+                    jQuery.ajax({
+                        url: '@Url.Action("CartOperation", "Shop")',
+                        type: "POST",
+                        data: JSON.stringify({ idproduct: idproduct, sumar: false}),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+
+                            $(btn).LoadingOverlay("hide")
+
+                            if (data.result) {
+                                $(input_cant).val(cant)
+                                sumarTotal()
+                            } else {
+                                swal("", data.message,"warning")
+                            }
+                        },
+                        beforeSend: function () {
+                            $(btn).LoadingOverlay("show")
+                        },
+                        error: function (error) {
+                            $(btn).LoadingOverlay("hide")
+                        }
+                    });
+
+            }
+
+        })
+
+        $(document).on("click", ".btn-delete", function () {
+
+            var idproduct = $(this).data("idproduct");
+            var card_product = $(this).parents("div.card-product")
+
+                    jQuery.ajax({
+                        url: '@Url.Action("DeleteCart", "Shop")',
+                        type: "POST",
+                        data: JSON.stringify({ idproduct: idproduct}),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+
+                            if (data.result) {
+                                card_product.remove()
+                                ShowCantCart()
+                                sumarTotal()
+                            } else {
+                                swal("", data.message,"warning")
+                            }
+                        }
+                    });
+        })
+
+
+        function Pay() {
+
+            if (parseInt($("#cantcart").text()) == 0) {
+                swal("", "No existe productos en el carrito", "warning")
+                return 
+            }
+            if ($("#cbodistritic").val() == null || $("#txtnombrecontacto").val() == "" || $("#txtdireccioncontacto").val() == "" || $("#txttelefonocontacto").val() == "") {
+                swal("", "Debe completar los datos de detalle envio", "warning")
+                return
+            }
+
+            var sale = {
+                TotalProducto: $("input.input-cantidad").length,
+                MontoTotal: 0,
+                Contacto: $("#txtnombrecontacto").val(),
+                IdDistrito: $("#cbodistritic").val(),
+                Telefono: $("#txttelefonocontacto").val(),
+                Direccion: $("#txtdireccioncontacto").val()
+            }
+
+            var cart_list = [];
+
+            $("input.input-cantidad").each(function (i) {
+
+                var product = $(this).data("oProducto");
+                var amount = parseFloat($(this).val())
+
+                cart_list.push({
+
+                    oProducto: product,
+                    Cantidad : amount
+                })
+            })
+
+
+             jQuery.ajax({
+                 url: '@Url.Action("PaymentProccess", "Shop")',
+                 type: "POST",
+                 data: JSON.stringify({ ocartList: cart_list, sale: sale }),
+                 dataType: "json",
+                 contentType: "application/json; charset=utf-8",
+                 success: function (data) {
+
+                     if (data.Status) {
+
+                         window.location.href = data.Link;
+                     } else {
+                         swal("", "Vuelva a intentarlo mas tarde", "warning")
+                     }
+
+                 },
+                 beforeSend: function () { $.LoadingOverlay("show") },
+                 error: function () {$.LoadingOverlay("hide") }
+            });
+
+        }
+
+    </script>
+    }

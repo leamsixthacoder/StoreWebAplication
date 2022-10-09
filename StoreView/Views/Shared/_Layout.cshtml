@@ -10,7 +10,7 @@
 <body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid px-4">
-            <a class="navbar-brand" href="#!">Mi Tienda</a>
+            <a class="navbar-brand" href="@Url.Action("Index","Shop")">Mi Tienda</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
@@ -25,10 +25,10 @@
                     }
                     else
                     {
-                        <a class="btn btn-outline-dark" href="@Url.Action("Carrito","Shop")">
+                        <a class="btn btn-outline-dark" href="@Url.Action("Cart","Shop")">
                             <i class="fa fa-shopping-cart me-1"></i>
                             Cart
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                            <span class="badge bg-dark text-white ms-1 rounded-pill" id="cantcart">0</span>
                         </a>
 
                         <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
@@ -51,7 +51,7 @@
     </nav>
     @RenderBody()
 
-  
+
 
     <footer>
         <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
@@ -60,5 +60,42 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
+
+    <script>
+
+        $(document).ready(function () {
+            ShowCantCart()
+        })
+        function ShowCantCart() {
+            if ($("#cantcart").length > 0) {
+
+                jQuery.ajax({
+                    url: '@Url.Action("CartAmount", "Shop")',
+                    type: "GET",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        $("#cantcart").text(data.amount)
+
+                    }
+                });
+            }
+
+        }
+
+    </script>
+
 </body>
 </html>
+""
+      @*jQuery.ajax({
+                    url: '',
+                    type: "",
+                    data: JSON.stringify(),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                    }
+                });*@
