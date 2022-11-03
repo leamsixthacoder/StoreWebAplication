@@ -20,7 +20,7 @@
                             <hr class="mt-2 mb-2" />
                             <div id="product-cart">
 
-                                @*<div class="card mb-2 card-product" >
+                                <div class="card mb-2 card-product" >
                                     <div class="card-body">
                                         <div class="row">
 
@@ -57,7 +57,7 @@
 
                                         </div>
                                     </div>
-                                </div>*@
+                                </div>
 
                             </div>
                             <div class="d-flex justify-content-end">
@@ -72,7 +72,7 @@
                             <div class="card">
                                 <div class="card-body bg-light">
                                     <h5 class="card-title"> Detalle Envio</h5>
-                                    <form action="/" method="post">
+                                    <form>
                                         <div class="mb-2">
                                             <label for="cbodepartment" class="form-label">Ciudad: </label>
                                             <select class="form-select form-select-sm" id="cbodepartment">
@@ -101,7 +101,7 @@
                                             <input type="text" class="form-control form-control-sm" id="txttelefonocontacto" />
                                         </div>
                                         <div class="d-grid">
-                                            <button class="btn btn-success" type="submit" onclick="Pay()">
+                                            <button class="btn btn-success" type="submit" onclick="Payment()">
                                                 <i class="fab fa-paypal"></i> Terminar y Procesar Pago
                                             </button>
                                         </div>
@@ -401,15 +401,17 @@
         })
 
 
-        function Pay() {
+        function Payment() {
+
 
             if (parseInt($("#cantcart").text()) == 0) {
                 swal("", "No existe productos en el carrito", "warning")
-                return 
+                return;
             }
             if ($("#cbodistritic").val() == null || $("#txtnombrecontacto").val() == "" || $("#txtdireccioncontacto").val() == "" || $("#txttelefonocontacto").val() == "") {
+
                 swal("", "Debe completar los datos de detalle envio", "warning")
-                return
+                return;
             }
 
             var sale = {
@@ -420,6 +422,7 @@
                 Telefono: $("#txttelefonocontacto").val(),
                 Direccion: $("#txtdireccioncontacto").val()
             }
+
 
             var cart_list = [];
 
@@ -435,7 +438,6 @@
                 })
             })
 
-
              jQuery.ajax({
                  url: '@Url.Action("PaymentProccess", "Shop")',
                  type: "POST",
@@ -446,7 +448,11 @@
 
                      if (data.Status) {
 
-                         window.location.href = data.Link;
+                         var jsonresult = data.Response;
+                         var links = jsonresult.links;
+                         var result = links.find(item => item.rel=== "approve")
+
+                         window.location.href = result.Link;
                      } else {
                          swal("", "Vuelva a intentarlo mas tarde", "warning")
                      }
@@ -455,7 +461,6 @@
                  beforeSend: function () { $.LoadingOverlay("show") },
                  error: function () {$.LoadingOverlay("hide") }
             });
-
         }
 
     </script>

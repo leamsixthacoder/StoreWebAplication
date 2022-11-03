@@ -185,7 +185,7 @@ namespace StoreView.Controllers
         {
             Session["Cliente"] = null;
             FormsAuthentication.SignOut();
-            return RedirectToAction("Index", "Access");
+            return RedirectToAction("Index", "Shop");
 
         }
     }

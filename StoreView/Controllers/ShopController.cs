@@ -8,6 +8,7 @@ using EntityLayer;
 using System.IO;
 using System.Threading.Tasks;
 using System.Data;
+using EntityLayer.Paypal;
 
 namespace StoreView.Controllers
 {
@@ -222,11 +223,26 @@ namespace StoreView.Controllers
             sale_detail.Columns.Add("Cant",typeof(int));
             sale_detail.Columns.Add("Total",typeof(decimal));
        
+            List<Item> oItemlist = new List<Item>();
+            
             foreach (Cart ocart in ocartList)
             {
                 decimal subtotal = Convert.ToDecimal(ocart.Cantidad.ToString()) * ocart.oProducto.Precio;
 
                 total += subtotal;
+
+                oItemlist.Add(new Item()
+                {
+                    name = ocart.oProducto.Nombre,
+                    quantity = ocart.Cantidad.ToString(),
+                    unit_amount = new UnitAmount()
+                    {
+                        currency_code = "USD",
+                        value = ocart.oProducto.Precio.ToString()
+                    }
+                });
+
+
                 sale_detail.Rows.Add(new object[]
                 {
                     ocart.oProducto.IdProducto,
@@ -235,32 +251,72 @@ namespace StoreView.Controllers
                 });
             }
 
+            PurchaseUnit purchaseUnit = new PurchaseUnit()
+            {
+                amount = new Amount()
+                {
+                    currency_code = "USD",
+                    value = total.ToString(),
+                    breakdown = new Breakdown()
+                    {
+                        item_total = new ItemTotal()
+                        {
+                            currency_code = "USD",
+                            value = total.ToString(),
+                        }
+                    }
+                },
+                description ="compra de articulo de mi tienda",
+                items = oItemlist
+            };
+
+            Checkout_Order checkout_Order = new Checkout_Order()
+            {
+                intent = "CAPTURE",
+                purchase_units = new List<PurchaseUnit>() { purchaseUnit},
+                application_context = new ApplicationContext()
+                {
+                    brand_name = "MiTienda.com",
+                    landing_page = "NO_PREFERENCE",
+                    user_action = "PAY_NOW",
+                    return_url = "https://localhost:44387/Shop/Paymentmade",
+                    cancel_url = "https://localhost:44387/Shop/Cart"
+                }
+            };
+
             sale.MontoTotal = total;
             sale.IdCliente = ((Client)Session["Cliente"]).IdCliente;
 
             TempData["Sale"] = sale;
             TempData["SaleDetail"] = sale_detail;
 
-            return Json(new { Status = true, Link = "/Shop/Paymentmade?idTransaccion=code0001&status=true" }, JsonRequestBehavior.AllowGet);
+            BL_Paypal bL_Paypal = new BL_Paypal();
+            Response_Paypal<Response_Checkout> response_Paypal = new Response_Paypal<Response_Checkout>();
+            response_Paypal = await bL_Paypal.CreateRequest(checkout_Order);
+
+
+            return Json(response_Paypal, JsonRequestBehavior.AllowGet);
 
         }
 
         public async Task<ActionResult> Paymentmade()
         {
 
-            string idtransaccion = Request.QueryString["idTransaccion"];
-            bool status = Convert.ToBoolean(Request.QueryString["status"]);
+            string token = Request.QueryString["token"];
+            BL_Paypal opaypal = new BL_Paypal();
+            Response_Paypal<Response_Capture> response_Paypal = new Response_Paypal<Response_Capture>();
 
+            response_Paypal = await opaypal.ApprovePayment(token);
 
-            ViewData["Status"] = status;
+            ViewData["Status"] = response_Paypal.Status;
 
-            if(status)
+            if(response_Paypal.Status)
             {
                 Sale oSale = (Sale)TempData["Sale"];
 
                 DataTable sale_detail = (DataTable)TempData["SaleDetail"];
 
-                oSale.idTransaccion = idtransaccion;
+                oSale.idTransaccion = response_Paypal.Response.purchase_units[0].payments.captures[0].id;
 
                 string message = string.Empty;
 
