@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Johan Flow Boutique";
 }
 
 <h1 class="mt-4">Dashboard</h1>
@@ -69,21 +69,21 @@
                 <div class="col-sm-2">
                     <div class="mb-2">
                         <label class="formlabel"> Fecha de Inicio :</label>
-                        <input class="form-control" id="txtstartdate" type="text" name="fechainicio" />
+                        <input class="form-control" id="txtstartdate" type="text" name="startdate" />
                     </div>
                 </div>
 
                 <div class="col-sm-2">
                     <div class="mb-2">
                         <label class="formlabel"> Fecha Fin :</label>
-                        <input class="form-control" id="txtfinishdate" type="text" name="fechafin" />
+                        <input class="form-control" id="txtfinishdate" type="text" name="finishdate" />
                     </div>
                 </div>
 
                 <div class="col-sm-2">
                     <div class="mb-2">
                         <label class="formlabel"> Id Transaccion:</label>
-                        <input class="form-control" id="txtidtransaccion" type="text" name="idtransaccion" />
+                        <input class="form-control" id="txtidtransaccion" type="text" name="idtransaction" />
                     </div>
                 </div>
 
@@ -167,9 +167,9 @@
 
 
             var Url = '@Url.Action("ListReport", "Home")' +
-                "?startdate=" + $("#txtstartdate").val() +
-                "?finishdate=" + $("#txtfinishdate").val() +
-                "?idtransaction=" + $("#txtidtransaction").val()
+                "?startdate=2022-01-04" +
+                "&finishdate=2022-12-31" +
+                "&idtransaction=0"
 
                 datatable = $("#table").DataTable({
                 responsive: true,
@@ -201,11 +201,13 @@
         $("#btnbuscar").on("click", function () {
                  var new_Url = '@Url.Action("ListReport", "Home")' +
                 "?startdate=" + $("#txtstartdate").val() +
-                "?finishdate=" + $("#txtfinishdate").val() +
-                "?idtransaction=" + $("#txtidtransaction").val()
+                "&finishdate=" + $("#txtfinishdate").val() +
+                "&idtransaction=" + $("#txtidtransaccion").val()
 
             datatable.ajax.url(new_Url).load()
 
         })
+
+
     </script>
 }

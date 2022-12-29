@@ -9,6 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Data;
 using EntityLayer.Paypal;
+using StoreView.filter;
 
 namespace StoreView.Controllers
 {
@@ -19,7 +20,8 @@ namespace StoreView.Controllers
         {
             return View();
         }
-
+        [SessionValidate]
+        [Authorize]
         public ActionResult Cart()
         {
             return View();
@@ -114,6 +116,9 @@ namespace StoreView.Controllers
 
             return Json(new {result = result, message = message }, JsonRequestBehavior.AllowGet);
         }
+
+        [SessionValidate]
+        [Authorize]
 
         [HttpGet]
         public JsonResult CartAmount()
@@ -299,6 +304,9 @@ namespace StoreView.Controllers
 
         }
 
+        [SessionValidate]
+        [Authorize]
+
         public async Task<ActionResult> Paymentmade()
         {
 
@@ -326,6 +334,35 @@ namespace StoreView.Controllers
             }
 
             return View();
+        }
+
+        [SessionValidate]
+        [Authorize]
+        public ActionResult MyOrders()
+        {
+            int idclient = ((Client)Session["Cliente"]).IdCliente;
+
+            List<SaleDetail> oList = new List<SaleDetail>();
+
+            bool conversion;
+
+            oList = new BL_Sales().ListSales(idclient).Select(oc => new SaleDetail()
+            {
+
+                oProducto = new Product()
+                {
+                    Nombre = oc.oProducto.Nombre,
+                    Precio = oc.oProducto.Precio,
+                    Base64 = BL_Resources.ConvertBase64(Path.Combine(oc.oProducto.RutaImagen, oc.oProducto.NombreImagen), out conversion),
+                    Extension = Path.GetExtension(oc.oProducto.NombreImagen)
+                },
+                Cantidad = oc.Cantidad,
+                Total= oc.Total,
+                idTransaccion = oc.idTransaccion
+            }).ToList();
+
+            return View(oList);
+
         }
 
     }

@@ -49,5 +49,56 @@ namespace DataLayer
             return result;
         }
 
+
+        public List<SaleDetail> ListSales(int idclient)
+        {
+            List<SaleDetail> list = new List<SaleDetail>();
+
+            try
+            {
+                using (SqlConnection oconection = new SqlConnection(DataBaseConnection.cn))
+                {
+                    string query = "SELECT * FROM fn_ListSell(@idclient)";
+                    SqlCommand cmd = new SqlCommand(query, oconection);
+                    cmd.Parameters.AddWithValue("@idclient", idclient);
+                    cmd.CommandType = CommandType.Text;
+                    oconection.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            list.Add(new SaleDetail()
+                            {
+
+                                oProducto = new Product()
+                                {
+                                    Nombre = reader["Nombre"].ToString(),
+                                    Precio = Convert.ToDecimal(reader["Precio"]),
+                                    RutaImagen = reader["RutaImagen"].ToString(),
+                                    NombreImagen = reader["NombreImagen"].ToString()
+                                },
+                                Cantidad = Convert.ToInt32(reader["Cantidad"]),
+                                Total = Convert.ToDecimal(reader["Total"]),
+                                idTransaccion = reader["idTransaccion"].ToString()
+
+
+
+                            });
+                        }
+                    }
+
+                }
+
+
+            }
+            catch
+            {
+                list = new List<SaleDetail>();
+            }
+            return list;
+
+        }
+
     }
 }

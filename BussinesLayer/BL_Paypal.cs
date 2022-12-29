@@ -25,7 +25,7 @@ namespace BussinesLayer
             {
                 client.BaseAddress = new Uri(urlpaypal);
 
-                var authToken = Encoding.ASCII.GetBytes($"{client}:{secret}");
+                var authToken = Encoding.ASCII.GetBytes($"{clientid}:{secret}");
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authToken));
 
                 var json = JsonConvert.SerializeObject(order);
@@ -53,7 +53,7 @@ namespace BussinesLayer
             {
                 client.BaseAddress = new Uri(urlpaypal);
 
-                var authToken = Encoding.ASCII.GetBytes($"{client}:{secret}");
+                var authToken = Encoding.ASCII.GetBytes($"{clientid}:{secret}");
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authToken));
 
                 var data = new StringContent("{}", Encoding.UTF8, "application/json");

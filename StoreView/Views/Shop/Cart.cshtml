@@ -446,13 +446,14 @@
                  contentType: "application/json; charset=utf-8",
                  success: function (data) {
 
+                     $.LoadingOverlay("hide")
                      if (data.Status) {
 
                          var jsonresult = data.Response;
                          var links = jsonresult.links;
                          var result = links.find(item => item.rel=== "approve")
 
-                         window.location.href = result.Link;
+                         window.location.href = result.href;
                      } else {
                          swal("", "Vuelva a intentarlo mas tarde", "warning")
                      }

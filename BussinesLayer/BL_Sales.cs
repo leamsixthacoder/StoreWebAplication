@@ -17,7 +17,11 @@ namespace BussinesLayer
         {
             return objDataLayer.Enroll(obj, SaleDetail, out Message);
         }
+        public List<SaleDetail> ListSales(int idclient)
+        {
+            return objDataLayer.ListSales(idclient);
 
+        }
 
     }
 }

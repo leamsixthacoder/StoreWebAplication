@@ -28,7 +28,7 @@ namespace StoreView
                       ));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/site.css",
+                      "~/Content/Site.css",
                       "~/Content/sweetalert.css"
 
                       ));

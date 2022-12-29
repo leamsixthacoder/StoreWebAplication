@@ -20,10 +20,11 @@ namespace DataLayer
             {
                 using (SqlConnection oconection = new SqlConnection(DataBaseConnection.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("sp_ReporteVentas", oconection);
-                    cmd.Parameters.AddWithValue("stardate", startdate);
-                    cmd.Parameters.AddWithValue("finishdate", finishdate);
-                    cmd.Parameters.AddWithValue("idtransaction", idtransaction);
+                    string query = "select CONVERT(char(10), v.FechaVenta, 103)[FechaVenta], CONCAT(c.Nombres, ' ', c.Apellidos)[Cliente], p.Nombre[Producto], p.Precio, dv.Cantidad, dv.Total, v.idTransaccion from detalle_venta dv inner join producto p on p.IdProducto = dv.IdProducto inner join ventas v on v.IdVenta = dv.IdVenta inner join cliente c on c.IdCliente = v.IdCliente where CONVERT(date, v.FechaVenta) between @startdate and @finishdate and (v.idTransaccion = @idtransaction or (@idtransaction = '0'))";
+                    SqlCommand cmd = new SqlCommand(query, oconection);
+                    cmd.Parameters.AddWithValue("@startdate", startdate);
+                    cmd.Parameters.AddWithValue("@finishdate", finishdate);
+                    cmd.Parameters.AddWithValue("@idtransaction", idtransaction);
                     cmd.CommandType = CommandType.Text;
                     oconection.Open();
 

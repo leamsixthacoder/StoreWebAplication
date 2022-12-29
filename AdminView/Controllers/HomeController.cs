@@ -94,7 +94,11 @@ namespace AdminView.Controllers
         public FileResult ExportVenta(string startdate, string finishdate, string idtransaction)
         {
             List<Report> olist = new List<Report>();
-
+            
+            if (idtransaction == "")
+            {
+                idtransaction = "0";
+            }
             olist = new BL_Report().Ventas(startdate, finishdate, idtransaction);
 
             DataTable dt = new DataTable();
