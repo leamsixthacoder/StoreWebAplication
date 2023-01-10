@@ -1,0 +1,105 @@
+﻿
+@{
+    ViewBag.Title = "Clientes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<ol class="breadcrumb mb-4 mt-4">
+    <li class="breadcrumb-item"><a href="">Resumen</a></li>
+    <li class="breadcrumb-item active"><a href="">Clientes</a></li>
+</ol>
+
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-users me-1"></i>Lista de Clientes
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+        </div>
+        <hr />
+        <table id="table" class="display cell-border" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Correo</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+
+        var datatable;
+        var selectedRow;
+
+        datatable = $("#table").DataTable({
+            responsive: true,
+            ordering: false,
+            "ajax": {
+                 url: '@Url.Action("ListClients", "Home")',
+                type: 'GET',
+                dataType: 'json'
+            },
+            "columns": [
+                {"data":"Nombres"},
+                { "data": "Apellidos" },
+                { "data": "Correo" }
+
+            ],
+            "language": {
+               "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/es-ES.json"
+            }
+
+        });
+
+        function openModal(json) {
+
+
+
+            $("#txtid").val(0)
+            $("#txtnombres").val("")
+            $("#txtapellidos").val("")
+            $("#txtcorreo").val("")
+            $("#messageError").hide()
+
+
+            if (json != null) {
+
+                $("#txtid").val(json.IdUsuario)
+                $("#txtnombres").val(json.Nombres)
+                $("#txtapellidos").val(json.Apellidos)
+                $("#txtcorreo").val(json.Correo)
+
+            }
+
+            $("#formModal").modal("show");
+        }
+
+
+
+        function save() {
+
+            var user = {
+
+                IdUsuario: $("#txtid").val(),
+                Activo: $("#cboactivo").val() == 1 ? true: false ,
+                Apellidos: $("#txtapellidos").val(),
+                Correo: $("#txtcorreo").val(),
+                Nombres: $("#txtnombres").val()
+
+
+            }
+
+        }
+
+
+    </script>
+}

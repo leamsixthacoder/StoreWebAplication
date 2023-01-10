@@ -51,6 +51,7 @@ namespace AdminView.Controllers
 
 
                 ViewBag.Error = null;
+                Session["User"] = oUsuario;
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -139,6 +140,8 @@ namespace AdminView.Controllers
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
+            Session["User"] = null;
+
             return RedirectToAction("Index", "Access");
 
         }

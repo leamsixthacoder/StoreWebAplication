@@ -20,7 +20,7 @@ namespace DataLayer
             {
                 using (SqlConnection oconection = new SqlConnection(DataBaseConnection.cn))
                 {
-                    string query = "select Idusuario, Nombres, Apellidos, Correo, Clave, Restablecer, Activo from usuario";
+                    string query = "select us.Idusuario, us.Nombres, us.Apellidos, us.Correo, us.Clave, rl.Descripcion as Rol, rl.idRol, us.Restablecer,us.Activo from usuario us inner join rol rl on rl.idRol = us.idRol ";
                     SqlCommand cmd = new SqlCommand(query, oconection);
                     cmd.CommandType = CommandType.Text;
                     oconection.Open();
@@ -36,6 +36,8 @@ namespace DataLayer
                                 Apellidos = reader["Apellidos"].ToString(),
                                 Correo = reader["Correo"].ToString(),
                                 Clave = reader["Clave"].ToString(),
+                                Rol = reader["Rol"].ToString(),
+                                IdRol = (Rol)reader["idRol"],
                                 Restablecer = Convert.ToBoolean(reader["Restablecer"]),
                                 Activo = Convert.ToBoolean(reader["Activo"])
 

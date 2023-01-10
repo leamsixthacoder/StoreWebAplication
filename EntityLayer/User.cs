@@ -13,6 +13,8 @@ namespace EntityLayer
         public string Apellidos { get; set; }
         public string Correo { get; set; }
         public string Clave { get; set; }
+        public Rol IdRol { get; set; }
+        public string Rol { get; set; }
         public bool Restablecer { get; set; }
         public bool Activo { get; set; }
 

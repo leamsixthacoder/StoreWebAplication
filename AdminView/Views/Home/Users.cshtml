@@ -29,6 +29,8 @@
                     <th>Apellidos</th>
                     <th>Correo</th>
                     <th>Activo</th>
+                    <th>Rol</th>
+
                     <th></th>
 
                 </tr>
@@ -68,18 +70,20 @@
                         <input type="text" class="form-control" id="txtcorreo" autocomplete="off" placeholder="junior@example.com">
                     </div>
 
+           
+
                     <div class="col-sm-6">
                         <label for="cboactivo" class="form-label">Activo</label>
                         <select class="form-select" id="cboactivo">
                             <option value="1">Si</option>
                             <option value="0">No</option>
-                            
+
                         </select>
                     </div>
 
 
 
-                    </div>
+                </div>
                 <div class="row mt-2">
                     <div class="col-12">
                         <div id="messageError" class="alert alert-danger" role="alert">
@@ -131,13 +135,14 @@
                     },
                     "width": "90px"
                 },
+                { "data": "Rol" },
                 {
-                    "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-edit"> <i class="fas fa-pen me-1"></i></button>  ' +
-                        '<button type="button" class="btn btn-danger btn-sm sm-2 btn-delete"> <i class="fas fa-trash me-1"></i></button>',
+                    "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-edit"> <i class="fas fa-pen me-1"></i></button>  ',
                     "orderable": false,
                     "searchable": false,
                     "width": "80px"
                 }
+
 
             ],
             "language": {
@@ -147,7 +152,7 @@
         });
 
         function openModal(json) {
-
+            debugger;
 
 
             $("#txtid").val(0)
@@ -234,7 +239,8 @@
                 Activo: $("#cboactivo").val() == 1 ? true: false ,
                 Apellidos: $("#txtapellidos").val(),
                 Correo: $("#txtcorreo").val(),
-                Nombres: $("#txtnombres").val()
+                Nombres: $("#txtnombres").val(),
+
 
 
             }

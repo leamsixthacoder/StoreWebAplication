@@ -8,21 +8,26 @@ using BussinesLayer;
 using Newtonsoft.Json;
 using System.Configuration;
 using System.IO;
-
+using AdminView.permissions;
 namespace AdminView.Controllers
 {
     [Authorize]
     public class MaintenanceController : Controller
     {
         // GET: Maintenance
+        [RolAttributes(Rol.Mantenimiento) ]
         public ActionResult ProductCategory()
         {
             return View();
         }
+        [RolAttributes(Rol.Mantenimiento)]
+
         public ActionResult ProductBrand ()
         {
             return View();
         }
+        [RolAttributes(Rol.Mantenimiento)]
+
         public ActionResult Product()
         {
             return View();

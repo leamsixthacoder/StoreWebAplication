@@ -8,6 +8,7 @@ using BussinesLayer;
 using System.Data;
 using ClosedXML.Excel;
 using System.IO;
+using AdminView.permissions;
 
 namespace AdminView.Controllers
 {
@@ -18,17 +19,40 @@ namespace AdminView.Controllers
         {
             return View();
         }
-
+        [RolAttributes(Rol.Administrador)]
         public ActionResult Users()
         {
 
             return View();
         }
+
+        public ActionResult NoAuthorization()
+        {
+
+            return View();
+        }
+
+        public ActionResult Clients()
+        {
+
+            return View();
+        }
+
         [HttpGet]
         public JsonResult ListUsers()
         {
             List<User> olist = new List<User>();
             olist = new BL_Users().List();
+
+            return Json(new { data = olist }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpGet]
+        public JsonResult ListClients()
+        {
+            List<Client> olist = new List<Client>();
+            olist = new BL_Client().List();
 
             return Json(new { data = olist }, JsonRequestBehavior.AllowGet);
         }
