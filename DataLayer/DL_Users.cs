@@ -70,6 +70,7 @@ namespace DataLayer
                     cmd.Parameters.AddWithValue("email", obj.Correo);
                     cmd.Parameters.AddWithValue("password", obj.Clave);
                     cmd.Parameters.AddWithValue("active", obj.Activo);
+                    cmd.Parameters.AddWithValue("rol", obj.Rol);
                     cmd.Parameters.Add("result",SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("message", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -104,6 +105,7 @@ namespace DataLayer
                     cmd.Parameters.AddWithValue("lastname", obj.Apellidos);
                     cmd.Parameters.AddWithValue("email", obj.Correo);
                     cmd.Parameters.AddWithValue("active", obj.Activo);
+                    cmd.Parameters.AddWithValue("rol", obj.Rol);
                     cmd.Parameters.Add("result", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("message", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
                     cmd.CommandType = CommandType.StoredProcedure;

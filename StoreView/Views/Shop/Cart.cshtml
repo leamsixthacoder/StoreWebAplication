@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Cart";
+    ViewBag.Title = "Carrito";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -74,17 +74,17 @@
                                     <h5 class="card-title"> Detalle Envio</h5>
                                     <form>
                                         <div class="mb-2">
-                                            <label for="cbodepartment" class="form-label">Ciudad: </label>
-                                            <select class="form-select form-select-sm" id="cbodepartment">
-]                                            </select>
-                                        </div>
-                                        <div class="mb-2">
                                             <label for="cboprovincia" class="form-label">Provincia: </label>
                                             <select class="form-select form-select-sm" id="cboprovincia">
                                             </select>
                                         </div>
                                         <div class="mb-2">
-                                            <label for="cbodistritic" class="form-label">Urbanizacion: </label>
+                                            <label for="cbodepartment" class="form-label">Ciudad: </label>
+                                            <select class="form-select form-select-sm" id="cbodepartment">
+                                            </select>
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="cbodistritic" class="form-label">Urbanización: </label>
                                             <select class="form-select form-select-sm" id="cbodistritic">
                                             </select>
                                         </div>
@@ -93,12 +93,24 @@
                                             <input type="text" class="form-control form-control-sm" id="txtnombrecontacto" />
                                         </div>
                                         <div class="mb-2">
-                                            <label for="txtdireccioncontacto" class="form-label">Direccion Contacto: </label>
+                                            <label for="txtdireccioncontacto" class="form-label">Dirección Contacto: </label>
                                             <input type="text" class="form-control form-control-sm" id="txtdireccioncontacto" />
                                         </div>
                                         <div class="mb-2">
                                             <label for="txttelefonocontacto" class="form-label">Telefono: </label>
                                             <input type="text" class="form-control form-control-sm" id="txttelefonocontacto" />
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="cbodistritic" class="form-label">Metodo envío: </label>
+                                            <select class="form-select form-select-sm" id="cbopedido">
+                                                <option value="1">Bm Cargo</option>
+                                                <option value="2">Caribe pack</option>
+                                                <option value="3">Domex</option>
+                                                <option value="4">Metro pack</option>
+                                                <option value="5">EPS</option>
+                                                <option value="6">Logicpaq</option>
+                                              
+                                            </select>
                                         </div>
                                         <div class="d-grid">
                                             <button class="btn btn-success" type="submit" onclick="Payment()">

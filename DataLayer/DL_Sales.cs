@@ -80,7 +80,8 @@ namespace DataLayer
                                 },
                                 Cantidad = Convert.ToInt32(reader["Cantidad"]),
                                 Total = Convert.ToDecimal(reader["Total"]),
-                                idTransaccion = reader["idTransaccion"].ToString()
+                                idTransaccion = reader["idTransaccion"].ToString(),
+                                SaleDate = reader["FechaVenta"].ToString()
 
 
 

@@ -70,7 +70,16 @@
                         <input type="text" class="form-control" id="txtcorreo" autocomplete="off" placeholder="junior@example.com">
                     </div>
 
-           
+                    <div class="col-sm-6">
+                        <label for="cboactivo" class="form-label">Activo</label>
+                        <select class="form-select" id="cborol">
+                            <option value="1">Administrador</option>
+                            <option value="2">Mantenimiento</option>
+                            <option value="3">Observador</option>
+
+
+                        </select>
+                    </div>
 
                     <div class="col-sm-6">
                         <label for="cboactivo" class="form-label">Activo</label>
@@ -160,6 +169,7 @@
             $("#txtapellidos").val("")
             $("#txtcorreo").val("")
             $("#cboactivo").val(1)
+            $("#cborol").val(2)
             $("#messageError").hide()
 
 
@@ -169,7 +179,9 @@
                 $("#txtnombres").val(json.Nombres)
                 $("#txtapellidos").val(json.Apellidos)
                 $("#txtcorreo").val(json.Correo)
-                $("#cboactivo").val(json.Activo == true ? 1  : 0)
+                $("#cboactivo").val(json.Activo == true ? 1 : 0)
+                $("#cborol").val(json.Rol)
+
 
             }
 
@@ -232,7 +244,7 @@
         })
 
         function save() {
-
+            debugger;
             var user = {
 
                 IdUsuario: $("#txtid").val(),
@@ -240,6 +252,8 @@
                 Apellidos: $("#txtapellidos").val(),
                 Correo: $("#txtcorreo").val(),
                 Nombres: $("#txtnombres").val(),
+                Rol: $("#cborol").val(),
+
 
 
 

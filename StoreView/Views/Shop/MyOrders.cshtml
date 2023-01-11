@@ -30,6 +30,8 @@
                                                         <th>Precio Unitario</th>
                                                         <th>Cantidad</th>
                                                         <th>Sub Total</th>
+                                                        <th>Fecha Compra</th>
+
                                                     </tr>
                                                 </thead>
                                                 <tbody class="bg-white">
@@ -49,6 +51,10 @@
                                                         <td valign="middle">
                                                             $ @item.Total USD
                                                         </td>
+                                                        <td valign="middle">
+                                                            @item.SaleDate
+                                                        </td>
+
                                                     </tr>
                                                 </tbody>
                                             </table>

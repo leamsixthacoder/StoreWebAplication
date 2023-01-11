@@ -13,7 +13,7 @@ namespace EntityLayer
         public Product oProducto { get; set; }
         public int Cantidad { get; set; }
         public decimal Total { get; set; }
-
+        public string SaleDate { get; set; }
         public string idTransaccion { get; set; }
 
 

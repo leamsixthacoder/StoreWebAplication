@@ -281,7 +281,7 @@ namespace StoreView.Controllers
                 purchase_units = new List<PurchaseUnit>() { purchaseUnit},
                 application_context = new ApplicationContext()
                 {
-                    brand_name = "MiTienda.com",
+                    brand_name = "JohanFlowBoutique.com",
                     landing_page = "NO_PREFERENCE",
                     user_action = "PAY_NOW",
                     return_url = "https://localhost:44387/Shop/Paymentmade",
@@ -358,7 +358,8 @@ namespace StoreView.Controllers
                 },
                 Cantidad = oc.Cantidad,
                 Total= oc.Total,
-                idTransaccion = oc.idTransaccion
+                idTransaccion = oc.idTransaccion,
+                SaleDate = oc.SaleDate
             }).ToList();
 
             return View(oList);
