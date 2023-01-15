@@ -41,7 +41,7 @@ namespace BussinesLayer
 
                 MailMessage email = new MailMessage();
                 email.To.Add(mail);
-                email.From = new MailAddress("leamsi0735@gmail.com");
+                email.From = new MailAddress("johanflowboutique@gmail.com");
                 email.Subject = subject;
                 email.Body = message;
                 email.IsBodyHtml = true;
@@ -49,7 +49,7 @@ namespace BussinesLayer
 
                 var smtp = new SmtpClient()
                 {
-                    Credentials = new NetworkCredential("leamsi0735@gmail.com", "orivuqxvrtyqpffx"),
+                    Credentials = new NetworkCredential("johanflowboutique@gmail.com", "morsescxfbjhrrqz"),
                     Host = "smtp.gmail.com",
                     Port = 587,
                     EnableSsl = true

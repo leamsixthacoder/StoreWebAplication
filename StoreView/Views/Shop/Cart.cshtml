@@ -73,19 +73,15 @@
                                 <div class="card-body bg-light">
                                     <h5 class="card-title"> Detalle Envio</h5>
                                     <form>
+
                                         <div class="mb-2">
-                                            <label for="cboprovincia" class="form-label">Provincia: </label>
-                                            <select class="form-select form-select-sm" id="cboprovincia">
-                                            </select>
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="cbodepartment" class="form-label">Ciudad: </label>
+                                            <label for="cbodepartment" class="form-label">Provincia: </label>
                                             <select class="form-select form-select-sm" id="cbodepartment">
                                             </select>
                                         </div>
                                         <div class="mb-2">
-                                            <label for="cbodistritic" class="form-label">Urbanización: </label>
-                                            <select class="form-select form-select-sm" id="cbodistritic">
+                                            <label for="cboprovincia" class="form-label">Ciudad: </label>
+                                            <select class="form-select form-select-sm" id="cboprovincia">
                                             </select>
                                         </div>
                                         <div class="mb-2">
@@ -109,7 +105,9 @@
                                                 <option value="4">Metro pack</option>
                                                 <option value="5">EPS</option>
                                                 <option value="6">Logicpaq</option>
-                                              
+                                                <option value="6">Delivery (Solo en San Juan)</option>
+
+
                                             </select>
                                         </div>
                                         <div class="d-grid">
@@ -420,7 +418,7 @@
                 swal("", "No existe productos en el carrito", "warning")
                 return;
             }
-            if ($("#cbodistritic").val() == null || $("#txtnombrecontacto").val() == "" || $("#txtdireccioncontacto").val() == "" || $("#txttelefonocontacto").val() == "") {
+            if ($("#cboprovincia").val() == null || $("#txtnombrecontacto").val() == "" || $("#txtdireccioncontacto").val() == "" || $("#txttelefonocontacto").val() == "") {
 
                 swal("", "Debe completar los datos de detalle envio", "warning")
                 return;
@@ -430,7 +428,7 @@
                 TotalProducto: $("input.input-cantidad").length,
                 MontoTotal: 0,
                 Contacto: $("#txtnombrecontacto").val(),
-                IdDistrito: $("#cbodistritic").val(),
+                IdDistrito: $("#cboprovincia").val(),
                 Telefono: $("#txttelefonocontacto").val(),
                 Direccion: $("#txtdireccioncontacto").val()
             }
